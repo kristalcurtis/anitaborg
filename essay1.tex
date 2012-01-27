@@ -12,42 +12,33 @@
 
 \textbf{Describe a significant computer science project you have worked on. If you have worked on a major independent research project (such as research for a graduate program), please describe that work here. Give an overview of the problem, explain how you approached key technical challenges, and describe what you gained from the experience. If the project was team-based, be sure to specify your individual role and contributions.}\\
 
-I am a part of the AMP Lab at UC Berkeley.
-The goal of the AMP lab is to use machine learning (\textbf{A}lgorithms), warehouse-scale computing (\textbf{M}achines), and crowdsourcing (\textbf{P}eople) to tackle Big Data problems.
-I work with David Patterson, and he believes that since we've made a lot of progress in computer science, it's now a good time to look outside the field for problems to drive innovation in our field.\footnote{http://www.nytimes.com/2011/12/06/science/david-patterson-enlist-computer-scientists-in-cancer-fight.html} % could change this to a reference
-Genomics has emerged as a very interesting big data problem.  % more background?
-DNA sequencing is becoming very cheap, so many more people are getting their genomes sequenced. % source?  where did the graph in the SNAP talk come from?
-However, before this can become a part of medical treatment that is available to everyone, the data analysis step must be made more efficient and more affordable.  % "$20,000 price tag" article?
-% explain why this is so important/exciting -- can be used in personalized medicine (especially oncology)
+I am affiliated with the AMP Lab at UC Berkeley.
+The lab's mission is to use machine learning (\textbf{A}lgorithms), warehouse-scale computing (\textbf{M}achines), and crowdsourcing (\textbf{P}eople) to tackle Big Data problems.
+One of my advisors, David Patterson, has argued that it is important to look outside CS for problems to drive innovation in our field.\footnote{http://www.nytimes.com/2011/12/06/science/david-patterson-enlist-computer-scientists-in-cancer-fight.html} % could change this to a reference
+Whole-genome analysis, as opposed to selective analysis\footnote{\eg https://www.23andme.com/}, has emerged as a potentially powerful medical diagnostic tool.
+Once available only to the likes of Steve Jobs, whole-genome sequencing has rapidly become more affordable; the wet lab portion of genome analysis will soon fall to \$1000. % citation to steve jobs book/nyt article?
+With these developments, the data analysis required to transform the raw output of DNA sequencing machines to a full genome has become the bottleneck\footnote{http://www.nytimes.com/2011/12/01/business/dna-sequencing-caught-in-deluge-of-data.html} and is therefore a compelling target for our lab.
 
-The problem we're looking at is how to take the output of DNA sequencing machines, which is lots of short reads of DNA, and put them together to produce a complete reading of the individual's genome.
-This is like doing a puzzle.
-As a result of the human genome project, we have a reference genome to use to guide our efforts.
-This is like having a picture on the box lid that you can use to help you figure out where the pieces go.
-The idea is that for each read, you want to find the location in the reference genome where it best matches.
-Once you've done this for all the reads you get from the sequencer, you have other stages in the data processing pipeline to produce a complete genome.
-However, this problem, which is called alignment, is a very important and expensive step in the process.
-My colleagues and I developed the Scalable Nucleotide Alignment Program (SNAP), an algorithm that leverages resource improvements and provides algorithmic innovation to get better speed and accuracy than current solutions.
+The first step in this analysis pipeline is \textit{short read alignment}, where for each read (\ie around 100 bases -- the letters A, T, C, G -- of DNA), we find the location in the reference genome where it best matches.
+The reference genome is a 3-billion base aggregate of what human genomes are like; since only 0.1\% of an individual's genome is unique, each read will only differ from the reference by a few characters.
+My colleagues and I developed the Scalable Nucleotide Alignment Program (SNAP), an algorithm that leverages resource improvements and conserves computation to get better speed and accuracy than current solutions.
 
-% goal:  emphasize that looking for near duplicates is very fundamental to the problem
-The thing I most worked on was writing various data processing jobs to get a feel for the patterns in the genome.
-What makes alignment hard is that the genome is not a random string of 3 billion bases (the letters A, T, C, G); rather, it has lots of redundancy in it, \eg from chemicals that recur at various points throughout the chromosomes. % source here?
-If it were simply a matter of exact duplication, you could easily identify it beforehand.
-Then, when you tried to align a read to a region known to be duplicated elsewhere, you could give up early, since you'd be unable to unambiguously align it.
-This does happen somewhat, so I identified all substrings of length 100 (the read length), and we updated the aligner to be aware of this.
-However, what makes this really difficult is that it's more common to have near duplication.
-That is, there are lots of substrings in the genome that are very similar to each other (\eg a few edits apart).
-You'd still like to identify these in advance; however, now, instead of merely quitting early, you'd like to first be aware of these similar regions and second to compare against them in aggregate rather than doing the na\"{\i}ve thing of comparing against them all, one at a time.
-Therefore, I worked on designing and implementing a distributed algorithm for identifying similar substrings throughout the whole genome.
-My findings have really influenced the aligner.
+My main contribution was characterizing the patterns in the genome.
+What makes alignment hard is that the genome is not random; rather, it is highly redundant, \eg from proteins that multiple chromosomes encode.
+Thus, reads often align to many locations throughout the genome, and it is expensive to find the best match.
+If it were simply a matter of exact duplication, we could easily (and do) identify it beforehand.
+Then, when we detect that a read matches a duplicate region, we give up early, since an unambiguous alignment is impossible.
+However, the more difficult problem is near duplication; \ie there are many substrings in the genome that are very similar to each other (\eg a few edits apart).
+We still want to identify these in advance; however, since an unambiguous best alignment may exist, we cannot merely quit early.
+Instead, we want to compare against them in aggregate rather than doing the na\"{\i}ve thing of comparing against them all, one at a time.
+Therefore, I designed and implemented a distributed algorithm for identifying similar substrings throughout the genome.
 
-I gained a lot from working on this project.
-I learned a lot about genomics and its potential for personalized medicine as well as how computer scientists are actually in a good position to help with problems like this.
-I learned about choosing applications to drive research so you don't fall victim to the hammer/nail problem (\ie if you have a hammer, everything looks like a nail).
-We released a tech report on the algorithm a few months ago\footnote{http://arxiv.org/abs/1111.5572}, and we're working on submitting a full paper in the next few weeks.
-I got to broaden my circle of collaborators to include another student, other professors in our department, a medical doctor at UCSF, and a researcher at MSR.
-This networking not only helps with idea generation but also will help me when I'm on the job market.
-I also got to give presentations on the work at UC Santa Cruz, Genentech, and SRI and got feedback from people who are experts in genomics.
-I also get to feel that I'm working on a project that could actually have a big impact and help lots of people, which is a really great opportunity, so I'm really glad.
+Through working on this project, I learned a great deal about genomics and the potential for personalized medicine as well as how computer scientists can help with problems like this.
+%I learned about choosing applications to drive research so you don't fall victim to the hammer/nail problem (\ie if you have a hammer, everything looks like a nail).
+I have broadened my circle of collaborators to include another student, other professors in the lab, a medical doctor at UCSF, and a researcher at MSR.
+This networking not only helps with idea generation but also will help me identify job opportunities.
+I was invited to give presentations on this work at UC Santa Cruz, Genentech, and SRI and got feedback from people who are experts in genomics.
+We released a tech report on the algorithm a few months ago\footnote{http://arxiv.org/abs/1111.5572}, and we plan to submit a full paper in the next few weeks.
+Most of all, it has been exciting to work on a project that could have a big impact and help lots of people.
 
 \end{document}
